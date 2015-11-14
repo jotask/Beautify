@@ -10,8 +10,8 @@
  * 
  */
 import uk.ac.aber.beautify.core.BeautifyKernel;
-import uk.ac.aber.beautify.core.DefaultBeautifyFilters;
-import uk.ac.aber.beautify.gui.*;
+import uk.ac.aber.beautify.custom.JotaFilter;
+import uk.ac.aber.beautify.gui.BeautifyGUI;
 
 public class Beautify {
 
@@ -19,10 +19,13 @@ public class Beautify {
 		
 		BeautifyGUI gui = new BeautifyGUI();
 		BeautifyKernel beautify = new BeautifyKernel(gui);
+
+		// TODO delete this line
+		beautify.loadImage("C:\\Users\\Jose\\Documents\\image_02.jpg");
 		
 		
 		// TODO: Over-ride this part with your own filter set
-		beautify.setFilterSet(new DefaultBeautifyFilters());
+		beautify.setFilterSet(new JotaFilter());
 		
 	}	
 }

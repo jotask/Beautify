@@ -1,15 +1,14 @@
 package uk.ac.aber.beautify.core;
 
-import java.awt.image.BufferedImage;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
+import uk.ac.aber.beautify.filters.Filter;
+import uk.ac.aber.beautify.gui.BeautifyGUI;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-
-import uk.ac.aber.beautify.filters.Filter;
-import uk.ac.aber.beautify.gui.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class BeautifyKernel implements ActionListener {
 
@@ -27,6 +26,7 @@ public class BeautifyKernel implements ActionListener {
 	}
 	
 	public void loadImage(String filename) {
+		System.out.println(filename);
 		boolean errorFound = false;
 		try {
 			originalImage = ImageIO.read(new File(filename));

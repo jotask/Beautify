@@ -104,4 +104,19 @@ public abstract class BeautifyUtils {
 		
 		return rgb;
 	}
+
+	public static int[] convertToRGB(int pixel){
+		int rgb[] = new int[3];
+
+		rgb[0] = ( (pixel & 0xff0000) >> 16 );
+		rgb[1] = ( (pixel & 0x00ff00) >> 8 );
+		rgb[2] = ( (pixel & 0x0000ff) );
+
+		return rgb;
+	}
+
+	public static int convertToPixel(int[] rgb){
+		return ((rgb[0] & 0xff) << 16) | ((rgb[1] & 0xff) << 8) | (rgb[2] & 0xff);
+	}
+
 }
