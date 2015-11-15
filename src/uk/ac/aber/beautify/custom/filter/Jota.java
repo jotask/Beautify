@@ -2,10 +2,8 @@ package uk.ac.aber.beautify.custom.filter;
 
 import uk.ac.aber.beautify.custom.histogram.Histogram;
 import uk.ac.aber.beautify.filters.Filter;
-import uk.ac.aber.beautify.utils.BeautifyUtils;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 
 /**
  * Created by Jose Vives on 14/11/2015.
@@ -22,43 +20,21 @@ public class Jota extends Filter{
      */
 
     public Jota() {
-        this.setName("JotaFilter");
+        this.setName("JoseFilter");
     }
 
     @Override
     public BufferedImage filter(BufferedImage ip) {
         BufferedImage outputImage = new BufferedImage(ip.getWidth(), ip.getHeight(), ip.getType());
-        WritableRaster raster = outputImage.getRaster();
 
-        Histogram histogram = new Histogram(ip);
+        Histogram histogram = new Histogram("Initial Histogram", ip);
         histogram.showHistogram();
 
-        for (int u = 0; u < ip.getWidth(); u++) {
-            for (int v = 0; v < ip.getHeight(); v++) {
+        Contrast contrast = new Contrast(histogram, ip);
+        outputImage = contrast.autoContrast(ip);
 
-                // ---------------------------------------
-                //                  RGB
-                // ---------------------------------------
-
-                int pixel = ip.getRGB(u, v);
-
-                int[] rgb = BeautifyUtils.convertToRGB(pixel);
-
-//                for(int i = 0; i < rgb.length; i++){
-//                    rgb[i] += 5;
-//                }
-
-
-                // ---------------------------------------
-                //                  HSV
-                // ---------------------------------------
-                float hsv[] = BeautifyUtils.RGBtoHSV(rgb);
-
-                rgb = BeautifyUtils.HSVtoRGB(hsv);
-
-                raster.setPixel(u, v, rgb);
-            }
-        }
+        Histogram result = new Histogram("Result Histogram", outputImage);
+        result.showHistogram();
 
         return outputImage;
     }

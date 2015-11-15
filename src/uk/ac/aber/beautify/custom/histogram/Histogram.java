@@ -44,7 +44,7 @@ public class Histogram {
     private int[] maxValueHistogram;
     private int[] maxValueCumulative;
 
-    public Histogram(BufferedImage image) {
+    public Histogram(String title, BufferedImage image) {
 
         this.image = image;
 
@@ -73,7 +73,7 @@ public class Histogram {
             JPanel panel = new JPanel();
             panel.setLayout(new GridLayout(2, 3));
             frame.getContentPane().add(panel);
-            frame.setTitle("Histogram");
+            frame.setTitle(title);
             frame.setSize(new Dimension(255*3, 120*2));
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,4 +139,7 @@ public class Histogram {
     public void showHistogram(){
         this.frame.setVisible(true);
     }
+
+    public int[][] getHistogram() { return  this.histogram; }
+    public  int[][] getCumulative(){ return  this.cumulative; }
 }
