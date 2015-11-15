@@ -13,18 +13,36 @@ import java.awt.image.Raster;
  */
 public class Histogram {
 
+    public enum CHANNEL {
+        RED(0, Color.RED, 0),
+        GREEN(1, Color.GREEN, 255),
+        BLUE(2, Color.BLUE, 255*2);
+
+        private int channel;
+        private Color color;
+        private int offset;
+
+        CHANNEL(int i, Color color, int offset) {
+            channel = i;
+            this.color = color;
+            this.offset = offset;
+        }
+
+        public int getChannel(){ return this.channel; }
+        public Color getColor(){ return this.color; }
+        public int getOffset(){ return this.offset; }
+
+    }
+
     private final BufferedImage image;
 
-    private JFrame histogramFrame;
-    private HistogramPanel histogramPanel;
-    private int[][] histogram;
+    private JFrame frame;
 
-    private JFrame cumulativeFrame;
-    private HistogramPanel cumulativePanel;
+    private int[][] histogram;
     private int[][] cumulative;
 
     private int[] maxValueHistogram;
-    private int[] macValueCumulative;
+    private int[] maxValueCumulative;
 
     public Histogram(BufferedImage image) {
 
@@ -33,7 +51,7 @@ public class Histogram {
         histogram = new int[256][3];
         cumulative = new int[256][3];
         maxValueHistogram = new int[3];
-        macValueCumulative = new int[3];
+        maxValueCumulative = new int[3];
 
         for(int i = 0; i < histogram.length; i++){
             for(int rgb = 0; rgb < histogram[0].length; rgb++){
@@ -44,35 +62,29 @@ public class Histogram {
 
         for(int rgb = 0; rgb < maxValueHistogram.length; rgb++){
             maxValueHistogram[rgb] = 0;
-            macValueCumulative[rgb] = 0;
+            maxValueCumulative[rgb] = 0;
         }
 
 
         {
 
-            histogramFrame = new JFrame();
-            histogramFrame.setTitle("Histogram");
+            frame = new JFrame();
+            frame.setLayout(new BorderLayout());
+            JPanel panel = new JPanel();
+            panel.setLayout(new GridLayout(2, 3));
+            frame.getContentPane().add(panel);
+            frame.setTitle("Histogram");
+            frame.setSize(new Dimension(255*3, 120*2));
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            histogramFrame.setSize(new Dimension(255, 120));
+            panel.add(new HistogramPanel(histogram, maxValueHistogram, CHANNEL.RED));
+            panel.add(new HistogramPanel(histogram, maxValueHistogram, CHANNEL.GREEN));
+            panel.add(new HistogramPanel(histogram, maxValueHistogram, CHANNEL.BLUE));
 
-            histogramPanel = new HistogramPanel(histogram, maxValueHistogram);
-
-            histogramFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            histogramFrame.getContentPane().add(histogramPanel);
-
-        }
-
-        {
-
-            cumulativeFrame = new JFrame();
-            cumulativeFrame.setTitle("Cumulative");
-
-            cumulativeFrame.setSize(new Dimension(255, 120));
-
-            cumulativePanel = new HistogramPanel(cumulative, macValueCumulative);
-
-            cumulativeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            cumulativeFrame.getContentPane().add(cumulativePanel);
+            panel.add(new HistogramPanel(cumulative, maxValueCumulative, CHANNEL.RED));
+            panel.add(new HistogramPanel(cumulative, maxValueCumulative, CHANNEL.GREEN));
+            panel.add(new HistogramPanel(cumulative, maxValueCumulative, CHANNEL.BLUE));
 
         }
 
@@ -119,18 +131,12 @@ public class Histogram {
             }
         }
 
-        for(int rgb = 0; rgb < macValueCumulative.length; rgb++) {
-            macValueCumulative[rgb] = cumulative[254][rgb];
+        for(int rgb = 0; rgb < maxValueCumulative.length; rgb++) {
+            maxValueCumulative[rgb] = cumulative[254][rgb];
         }
     }
 
     public void showHistogram(){
-        this.histogramPanel.repaint();
-        this.histogramFrame.setVisible(true);
-    }
-
-    public void showCumulative(){
-        this.cumulativePanel.repaint();
-        this.cumulativeFrame.setVisible(true);
+        this.frame.setVisible(true);
     }
 }

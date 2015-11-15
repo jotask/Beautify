@@ -11,43 +11,26 @@ import java.awt.*;
  */
 public class HistogramPanel extends JPanel {
 
-    public enum CHANNEL {
-        RED(0, Color.RED),
-        GREEN(1, Color.GREEN),
-        BLUE(2, Color.BLUE);
-
-        private int channel;
-        private Color color;
-
-        CHANNEL(int i, Color color) {
-            channel = i;
-            this.color = color;
-    }
-
-    public int getChannel(){ return channel;}
-    public Color getColor(){ return color;}
-}
-
     private int[][] histogram;
     private int[] maxVal;
-    private CHANNEL channel;
+    private Histogram.CHANNEL channel;
 
     private double stepSize;
 
-    private int thresholdLine = -1;
+    public int OFFSET = 0;
 
-    public static final int OFFSET = 25;
-
-    public HistogramPanel(int[][] histogram, int[] maxVal) {
+    public HistogramPanel(int[][] histogram, int[] maxVal, Histogram.CHANNEL channel) {
         super();
         this.histogram = histogram;
         this.maxVal = maxVal;
-        this.channel = CHANNEL.BLUE;
+        this.channel = channel;
     }
 
     public void paintComponent(Graphics g) {
         g.clearRect(0, 0, this.getWidth(), this.getHeight());
         g.setColor(channel.getColor());
+
+        OFFSET *= this.channel.getOffset();
 
             if (maxVal[channel.getChannel()] != 0) {
                 stepSize = ((double) this.getWidth() - OFFSET * 2) / (double) 255;
