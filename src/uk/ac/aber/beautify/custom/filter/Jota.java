@@ -1,5 +1,6 @@
 package uk.ac.aber.beautify.custom.filter;
 
+import uk.ac.aber.beautify.custom.histogram.Histogram;
 import uk.ac.aber.beautify.filters.Filter;
 import uk.ac.aber.beautify.utils.BeautifyUtils;
 
@@ -27,16 +28,30 @@ public class Jota extends Filter{
     @Override
     public BufferedImage filter(BufferedImage ip) {
         BufferedImage outputImage = new BufferedImage(ip.getWidth(), ip.getHeight(), ip.getType());
-
         WritableRaster raster = outputImage.getRaster();
 
-        for(int u = 0; u < ip.getWidth(); u++) {
+        Histogram histogram = new Histogram(ip);
+        histogram.showHistogram();
+
+        for (int u = 0; u < ip.getWidth(); u++) {
             for (int v = 0; v < ip.getHeight(); v++) {
+
+                // ---------------------------------------
+                //                  RGB
+                // ---------------------------------------
 
                 int pixel = ip.getRGB(u, v);
 
                 int[] rgb = BeautifyUtils.convertToRGB(pixel);
 
+//                for(int i = 0; i < rgb.length; i++){
+//                    rgb[i] += 5;
+//                }
+
+
+                // ---------------------------------------
+                //                  HSV
+                // ---------------------------------------
                 float hsv[] = BeautifyUtils.RGBtoHSV(rgb);
 
                 rgb = BeautifyUtils.HSVtoRGB(hsv);

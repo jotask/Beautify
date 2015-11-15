@@ -6,7 +6,6 @@ public abstract class BeautifyUtils {
 		for (int i = 0; i < values.length; i++) {
 			values[i] = Math.min(Math.max(0, values[i]), 255);
 		}
-		
 		return values;
 	}
 	
