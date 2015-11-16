@@ -62,7 +62,7 @@ public class Contrast {
                 int pixel = img.getRGB(u, v);
                 int[] rgb = BeautifyUtils.convertToRGB(pixel);
                 float[] hsv = BeautifyUtils.RGBtoHSV(rgb);
-                int i = 1;
+                int i = 2;
                 hsv[i] = (hsv[i] - pLow) * ( 255 / ( pHigh - pLow) );
                 rgb = BeautifyUtils.HSVtoRGB(hsv);
                 BeautifyUtils.clamp(rgb);
