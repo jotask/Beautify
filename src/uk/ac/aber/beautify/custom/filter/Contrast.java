@@ -30,7 +30,6 @@ public class Contrast {
         int[][] hist = histogram.getHistogram();
 
         // pLow
-
         main:for(int i = 0; i < hist.length; i++){
             for(int rgb = 0; rgb < hist[0].length; rgb++){
                 int value = hist[i][rgb];
@@ -42,7 +41,6 @@ public class Contrast {
         }
 
         // pHigh
-
         main:for(int i = hist.length - 1; i > 0; i++){
             for(int rgb = 0; rgb < hist[0].length; rgb++){
                 int value = hist[i][rgb];

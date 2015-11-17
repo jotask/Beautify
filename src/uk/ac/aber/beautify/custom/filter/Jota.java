@@ -1,6 +1,5 @@
 package uk.ac.aber.beautify.custom.filter;
 
-import uk.ac.aber.beautify.custom.HistogramEQ;
 import uk.ac.aber.beautify.custom.histogram.Histogram;
 import uk.ac.aber.beautify.filters.Filter;
 
@@ -31,8 +30,8 @@ public class Jota extends Filter{
         Histogram histogram = new Histogram("Initial Histogram", ip);
         histogram.showHistogram();
 
-        HistogramEQ eq = new HistogramEQ(ip);
-        outputImage = eq.equalize();
+        FilterConvolution f = new FilterConvolution(3);
+        outputImage = f.algorithm(ip);
 
         Histogram result = new Histogram("Result Histogram", outputImage);
         result.showHistogram();
