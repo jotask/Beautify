@@ -21,7 +21,7 @@ public class Beautify {
 		BeautifyKernel beautify = new BeautifyKernel(gui);
 
 		// TODO delete this line
-		beautify.loadImage("C:\\Users\\Jose\\Documents\\image_02.jpg");
+		beautify.loadImage("C:\\Users\\Jose\\Documents\\image_03.jpg");
 		
 		
 		// TODO: Over-ride this part with your own filter set

@@ -1,6 +1,5 @@
 package uk.ac.aber.beautify.custom.filter;
 
-import uk.ac.aber.beautify.custom.histogram.Histogram;
 import uk.ac.aber.beautify.filters.Filter;
 
 import java.awt.image.BufferedImage;
@@ -25,18 +24,12 @@ public class Jota extends Filter{
 
     @Override
     public BufferedImage filter(BufferedImage ip) {
-        BufferedImage outputImage = new BufferedImage(ip.getWidth(), ip.getHeight(), ip.getType());
 
-        Histogram histogram = new Histogram("Initial Histogram", ip);
-        histogram.showHistogram();
+        FilterConvolution f = new FilterConvolution(3, ip);
+//        f.createNoise();
+        f.median();
 
-        FilterConvolution f = new FilterConvolution(3);
-        outputImage = f.algorithm(ip);
-
-        Histogram result = new Histogram("Result Histogram", outputImage);
-        result.showHistogram();
-
-        return outputImage;
+        return f.getOutput();
     }
 
 }

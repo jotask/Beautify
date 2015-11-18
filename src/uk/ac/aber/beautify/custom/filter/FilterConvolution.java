@@ -1,8 +1,11 @@
 package uk.ac.aber.beautify.custom.filter;
 
+import uk.ac.aber.beautify.custom.filter.kernel.Kernel;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.util.Random;
 
 /**
  * Created by Jose Vives on 17/11/2015.
@@ -14,23 +17,30 @@ public class FilterConvolution {
 
     private Kernel kernel;
 
-    public FilterConvolution(int size) {
+    private BufferedImage inputBI;
+    private Raster input;
+    private BufferedImage outputBI;
+    private WritableRaster output;
+
+    public FilterConvolution(int size, BufferedImage original) {
         kernel = new Kernel(size);
+        this.inputBI = original;
+        this.input = original.getRaster();
+        outputBI = getNewBI();
+        outputBI.setData(input);
+        this.output = outputBI.getRaster();
     }
 
-    public BufferedImage algorithm(BufferedImage img){
-        BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+    private BufferedImage getNewBI(){
+        return new BufferedImage(inputBI.getWidth(), inputBI.getHeight(), inputBI.getType());
+    }
 
-        Raster input = img.getRaster();
-        WritableRaster raster = out.getRaster();
+    public void blur(){
 
-        int size = 20;
-        double[][] k = new double[size][size];
-        for(int i = 0; i < k.length; i++)
-            for(int j = 0; j < k[0].length; j++)
-                k[i][j] = (1d / (k.length * k[0].length));
+        kernel.setNormalKernel();
 
-        int filterWidth = (k.length - 1) / 2;
+        int filterWidth = kernel.getFilterWidth();
+        int filterHeight = kernel.getFilterHeight();
 
         for(int u = 0; u < input.getWidth(); u++){
             for(int v = 0; v < input.getHeight(); v++) {
@@ -40,29 +50,93 @@ public class FilterConvolution {
                 double[] sum = {0.0, 0.0, 0.0};
 
                 for(int i = -filterWidth; i <= filterWidth; i++){
-                    for(int j = -filterWidth; j <= filterWidth; j++){
+                    for(int j = -filterHeight; j <= filterHeight; j++){
 
-                        input.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
                                         Math.max(Math.min(v + j, input.getHeight() - 1), 0),
                                         inputPixels);
 
-                        sum[0] += inputPixels[0] * k[i + filterWidth][j + filterWidth];
-                        sum[1] += inputPixels[1] * k[i + filterWidth][j + filterWidth];
-                        sum[2] += inputPixels[2] * k[i + filterWidth][j + filterWidth];
+                        sum[0] += inputPixels[0] * kernel.getValue(i + filterWidth, j + filterHeight);
+                        sum[1] += inputPixels[1] * kernel.getValue(i + filterWidth, j + filterHeight);
+                        sum[2] += inputPixels[2] * kernel.getValue(i + filterWidth, j + filterHeight);
 
                     }
                 }
 
                 double[] outPixel = new double[3];
-                outPixel[0] = sum[0];// / (k.length * k[0].length);
-                outPixel[1] = sum[1];// / (k.length * k[0].length);
-                outPixel[2] = sum[2];// / (k.length * k[0].length);
-                raster.setPixel(u, v, outPixel);
+                outPixel[0] = sum[0];
+                outPixel[1] = sum[1];
+                outPixel[2] = sum[2];
+                output.setPixel(u, v, outPixel);
 
             }
         }
-        return  out;
     }
 
+    public void createNoise(){
 
+        Random rand = new Random();
+
+        for(int u = 0; u < input.getWidth(); u++) {
+            for (int v = 0; v < input.getHeight(); v++) {
+
+                double[] p = new double[3];
+                input.getPixel(u, v, p);
+
+                int r = rand.nextInt(100);
+                boolean random = (r > 97) ? true : false;
+                if(random){
+                    r = rand.nextInt(100);
+                    random = (r > 50) ? true : false;
+                    for(int i = 0; i < p.length; i++) {
+                        if (random){
+                            p[i] = 0;
+                        }else{
+                            p[i] = 255;
+                        }
+                    }
+                }
+                output.setPixel(u, v, p);
+
+            }
+        }
+    }
+
+//    public void median() {
+//
+//        double[] values = new double[kernel.getWidth() * kernel.getHeight()];
+//        int count;
+//
+//        int filterWidth = kernel.getFilterWidth();
+//        int filterHeight = kernel.getFilterHeight();
+//
+//        for(int u = 0; u < input.getWidth(); u++) {
+//            for (int v = 0; v < input.getHeight(); v++) {
+//
+//                double[] inputPixels =  new double[3];
+//                count = 0;
+//
+//                for(int i = -filterWidth; i <= filterWidth; i++){
+//                    for(int j = -filterHeight; j <= filterHeight; j++){
+//                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+//                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
+//                                inputPixels);
+//                        for(int rgb = 0; rgb < values.length; rgb++)
+//                            values[count] = inputPixels[0];
+//                        count++;
+//                    }
+//                }
+//                double middle;
+//                    Arrays.sort(values);
+//                    middle = values[values.length / 2];
+//                }
+//                output.setPixel(u, v, middle);
+//            }
+//        }
+//
+//    }
+
+    public BufferedImage getOutput(){
+        return this.outputBI;
+    }
 }
