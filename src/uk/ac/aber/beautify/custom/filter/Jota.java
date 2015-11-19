@@ -26,7 +26,7 @@ public class Jota extends Filter{
     public BufferedImage filter(BufferedImage ip) {
 
         FilterConvolution f = new FilterConvolution(3, ip);
-//        f.createNoise();
+        f.createNoise();
         f.median();
 
         return f.getOutput();

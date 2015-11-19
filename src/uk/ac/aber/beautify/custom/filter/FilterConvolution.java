@@ -5,6 +5,7 @@ import uk.ac.aber.beautify.custom.filter.kernel.Kernel;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -102,39 +103,51 @@ public class FilterConvolution {
         }
     }
 
-//    public void median() {
-//
-//        double[] values = new double[kernel.getWidth() * kernel.getHeight()];
-//        int count;
-//
-//        int filterWidth = kernel.getFilterWidth();
-//        int filterHeight = kernel.getFilterHeight();
-//
-//        for(int u = 0; u < input.getWidth(); u++) {
-//            for (int v = 0; v < input.getHeight(); v++) {
-//
-//                double[] inputPixels =  new double[3];
-//                count = 0;
-//
-//                for(int i = -filterWidth; i <= filterWidth; i++){
-//                    for(int j = -filterHeight; j <= filterHeight; j++){
-//                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
-//                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
-//                                inputPixels);
-//                        for(int rgb = 0; rgb < values.length; rgb++)
-//                            values[count] = inputPixels[0];
-//                        count++;
-//                    }
-//                }
-//                double middle;
-//                    Arrays.sort(values);
-//                    middle = values[values.length / 2];
-//                }
-//                output.setPixel(u, v, middle);
-//            }
-//        }
-//
-//    }
+    public void median() {
+
+        double[][] values = new double[3][kernel.getWidth() * kernel.getHeight()];
+        int count;
+
+        int filterWidth = kernel.getFilterWidth();
+        int filterHeight = kernel.getFilterHeight();
+
+        for(int u = 0; u < input.getWidth(); u++) {
+            for (int v = 0; v < input.getHeight(); v++) {
+
+                double[] inputPixels =  new double[3];
+                count = 0;
+
+                for(int i = -filterWidth; i <= filterWidth; i++){
+                    for(int j = -filterHeight; j <= filterHeight; j++){
+                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
+                                inputPixels);
+                        for(int rgb = 0; rgb < values.length; rgb++)
+                            values[rgb][count] = inputPixels[rgb];
+                        count++;
+                    }
+                }
+                double[] median = calculateTheMeadian(values);
+                output.setPixel(u, v, median);
+            }
+        }
+
+    }
+
+    private double[] calculateTheMeadian(double[][] values) {
+        double[] result = new double[3];
+        for(int i = 0; i < values.length; i++){
+            Arrays.sort(values[i]);
+            double median;
+            if(values[i].length % 2 == 0){
+                median = values[i][values[0].length / 2] + values[i][values[0].length / 2 - 1] / 2;
+            }else{
+                median = values[i][values[0].length / 2];
+            }
+            result[i] = median;
+        }
+        return result;
+    }
 
     public BufferedImage getOutput(){
         return this.outputBI;
