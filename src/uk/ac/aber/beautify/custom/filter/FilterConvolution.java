@@ -127,14 +127,13 @@ public class FilterConvolution {
                         count++;
                     }
                 }
-                double[] median = calculateTheMeadian(values);
+                double[] median = calculateTheMedian(values);
                 output.setPixel(u, v, median);
             }
         }
-
     }
 
-    private double[] calculateTheMeadian(double[][] values) {
+    private double[] calculateTheMedian(double[][] values) {
         double[] result = new double[3];
         for(int i = 0; i < values.length; i++){
             Arrays.sort(values[i]);
@@ -147,6 +146,44 @@ public class FilterConvolution {
             result[i] = median;
         }
         return result;
+    }
+
+    public void gaussian(){
+
+        kernel.setGaussianKernel();
+
+        int filterWidth = kernel.getFilterWidth();
+        int filterHeight = kernel.getFilterHeight();
+
+        for(int u = 0; u < input.getWidth(); u++){
+            for(int v = 0; v < input.getHeight(); v++) {
+
+                double[] inputPixels =  new double[3];
+
+                double[] sum = {0.0, 0.0, 0.0};
+
+                for(int i = -filterWidth; i <= filterWidth; i++){
+                    for(int j = -filterHeight; j <= filterHeight; j++){
+
+                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
+                                inputPixels);
+
+                        sum[0] += inputPixels[0] * kernel.getValue(i + filterWidth, j + filterHeight);
+                        sum[1] += inputPixels[1] * kernel.getValue(i + filterWidth, j + filterHeight);
+                        sum[2] += inputPixels[2] * kernel.getValue(i + filterWidth, j + filterHeight);
+
+                    }
+                }
+
+                double[] outPixel = new double[3];
+                outPixel[0] = sum[0];
+                outPixel[1] = sum[1];
+                outPixel[2] = sum[2];
+                output.setPixel(u, v, outPixel);
+
+            }
+        }
     }
 
     public BufferedImage getOutput(){

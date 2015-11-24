@@ -6,67 +6,46 @@ package uk.ac.aber.beautify.custom.filter.kernel;
  * @author Jose Vives.
  * @since 17/11/2015
  */
-public class Kernel {
+public class Kernel extends java.awt.image.Kernel{
 
-    protected double[][] kernel;
-
-    public Kernel(int size) {
-        this(size, size);
+    /**
+     * Constructs a <code>Kernel</code> object from an array of floats.
+     * The first <code>width</code>*<code>height</code> elements of
+     * the <code>data</code> array are copied.
+     * If the length of the <code>data</code> array is less
+     * than width*height, an <code>IllegalArgumentException</code> is thrown.
+     * The X origin is (width-1)/2 and the Y origin is (height-1)/2.
+     *
+     * @param width  width of the kernel
+     * @param height height of the kernel
+     * @param data   kernel data in row major order
+     * @throws IllegalArgumentException if the length of <code>data</code>
+     *                                  is less than the product of <code>width</code> and
+     *                                  <code>height</code>
+     */
+    public Kernel(int width, int height, float[] data) {
+        super(width, height, data);
     }
 
-    protected Kernel(int width, int height){
-        kernel = new double[width][height];
-    }
+    private float[] gausianKernel(double sigma, int size){
 
-    public int getWidth(){
-        return kernel.length;
-    }
+        double[] dvs = new double[size * 2 + 1];
+        double sum = 0.0;
+        for(int i = 0; i < dvs.length; i++){
 
-    public int getHeight(){
-        return kernel[0].length;
-    }
+            double x = i - size;
+            double v = 1.0 / Math.sqrt( 2 * Math.PI * sigma * sigma) * Math.exp(-x * x / ( 2 * sigma * sigma));
 
-    public void setNormalKernel(){
-        for(int i = 0; i < getWidth(); i++)
-            for(int j = 0; j < getHeight(); j++)
-                kernel[i][j] = (1d / (getWidth() * getHeight()));
-    }
+            dvs[i] = v;
+            sum += v;
 
-    public void setGaussianKernel(){
-        int sigmaX = getWidth();
-        int sigmaY = getHeight();
-        for(int i = 0; i < getWidth(); i++){
-            for(int j = 0; j < getHeight(); j++){
-                kernel[i][j] = Math.exp(-(( i*i + j*j) / ( 2d * (sigmaX * sigmaY) )));
-            }
         }
-    }
 
-    public void printKernel(){
-        StringBuilder builder = new StringBuilder();
-        System.out.println("Width: " + getWidth() + " Height: " + getHeight());
-        for(int i = 0; i < getWidth(); i++){
-            for(int j = 0; j < getHeight(); j++){
-                builder.append(kernel[i][j]);
-                if(j != getHeight() - 1){
-                    builder.append(" - ");
-                }
-            }
-            builder.append("\n");
+        float[] res = new float[size * 2 +1];
+        for(int i = 0; i < res.length; i++){
+            res[i] = (float)(dvs[i] / sum);
         }
-        System.out.println(builder.toString());
-    }
+        return res;
 
-    public int getFilterWidth(){
-        return (getWidth() - 1) / 2;
     }
-
-    public int getFilterHeight(){
-        return (getHeight() - 1) / 2;
-    }
-
-    public double getValue(int i, int j){
-        return this.kernel[i][j];
-    }
-
 }

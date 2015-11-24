@@ -18,6 +18,12 @@ public class Jota extends Filter{
      * Histogram equalisation on Value -> Convert to RGB
      */
 
+    /**
+     * Reduce noise
+     * apply the gaussian filter
+     * apply unsharp filter
+     */
+
     public Jota() {
         this.setName("JoseFilter");
     }
@@ -25,11 +31,9 @@ public class Jota extends Filter{
     @Override
     public BufferedImage filter(BufferedImage ip) {
 
-        FilterConvolution f = new FilterConvolution(3, ip);
-        f.createNoise();
-        f.median();
+        BufferedImage out = new BufferedImage(ip.getWidth(), ip.getHeight(), ip.getType());
 
-        return f.getOutput();
+        return out;
     }
 
 }
