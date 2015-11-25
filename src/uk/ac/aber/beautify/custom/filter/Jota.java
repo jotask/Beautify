@@ -18,6 +18,10 @@ public class Jota extends Filter{
      * Histogram equalisation on Value -> Convert to RGB
      */
 
+    /*
+    Overthinking how affort this assignment, and i think i have an idea how I gonna finish this one
+     */
+
     /**
      * Reduce noise
      * apply the gaussian filter
