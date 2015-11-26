@@ -1,5 +1,7 @@
 package uk.ac.aber.beautify.utils;
 
+import java.awt.image.BufferedImage;
+
 public abstract class BeautifyUtils {
 
 	public static int[] clamp(int[] values) {
@@ -63,7 +65,6 @@ public abstract class BeautifyUtils {
 	 * 
 	 * @author Wilhelm Burger
 	 * @author Mark J Burge
-	 * @param rgb
 	 * @return
 	 */
 	public static int[] HSVtoRGB(float[] hsv) {
@@ -116,6 +117,12 @@ public abstract class BeautifyUtils {
 
 	public static int convertToPixel(int[] rgb){
 		return ((rgb[0] & 0xff) << 16) | ((rgb[1] & 0xff) << 8) | (rgb[2] & 0xff);
+	}
+
+	public static BufferedImage getCopy(BufferedImage original){
+		BufferedImage output = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
+		output.setData(original.getData());
+		return  output;
 	}
 
 }

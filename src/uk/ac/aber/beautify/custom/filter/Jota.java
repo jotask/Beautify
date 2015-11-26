@@ -35,9 +35,10 @@ public class Jota extends Filter{
     @Override
     public BufferedImage filter(BufferedImage ip) {
 
-        BufferedImage out = new BufferedImage(ip.getWidth(), ip.getHeight(), ip.getType());
+        Unsharp usm = new Unsharp();
+        BufferedImage o = usm.filter(ip);
 
-        return out;
+        return o;
     }
 
 }
