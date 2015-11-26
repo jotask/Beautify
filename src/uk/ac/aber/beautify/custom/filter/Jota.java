@@ -21,10 +21,6 @@ public class Jota extends Filter{
      * Histogram equalisation on Value -> Convert to RGB
      */
 
-    /*
-    Overthinking how affort this assignment, and i think i have an idea how I gonna finish this one
-     */
-
     /**
      * Reduce noise
      * apply the gaussian filter
@@ -35,12 +31,12 @@ public class Jota extends Filter{
         this.setName("JoseFilter");
     }
 
-    private boolean test = false;
+    private boolean debug = false;
 
     @Override
     public BufferedImage filter(BufferedImage ip) {
 
-        if(test)
+        if(debug)
             return test(ip);
         return realFilter(ip);
     }
@@ -54,15 +50,20 @@ public class Jota extends Filter{
         for(int u = 0; u < inputRater.getWidth(); u++){
             for(int v = 0; v < inputRater.getHeight(); v++){
 
-                int[] inputPixels = new int[3];
+                double[] rgb = new double[3];
 
-                inputRater.getPixel(u, v, inputPixels);
+                inputRater.getPixel(u, v, rgb);
 
-                float[] hsv = BeautifyUtils.RGBtoHSV(inputPixels);
+                double[] hsv = BeautifyUtils.RGBtoHSV(rgb);
 
-                inputPixels = BeautifyUtils.HSVtoRGB(hsv);
+                rgb = BeautifyUtils.HSVtoRGB(hsv);
 
-                outputRaster.setPixel(u, v, inputPixels);
+                double[] lab = BeautifyUtils.RGBtoLAB(rgb);
+
+                rgb = BeautifyUtils.LABtoRGB(lab);
+
+                outputRaster.setPixel(u, v, rgb);
+
             }
         }
 
