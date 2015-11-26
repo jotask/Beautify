@@ -1,7 +1,6 @@
 package uk.ac.aber.beautify.custom.filter;
 
 import uk.ac.aber.beautify.custom.histogram.Histogram;
-import uk.ac.aber.beautify.utils.BeautifyUtils;
 
 import java.awt.image.BufferedImage;
 
@@ -53,22 +52,22 @@ public class Contrast {
 
     }
 
-    public BufferedImage autoContrast(BufferedImage img){
-        BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
-        for(int u = 0; u < img.getWidth(); u++){
-            for(int v = 0; v < img.getHeight(); v++){
-                int pixel = img.getRGB(u, v);
-                int[] rgb = BeautifyUtils.convertToRGB(pixel);
-                float[] hsv = BeautifyUtils.RGBtoHSV(rgb);
-                int i = 2;
-                hsv[i] = (hsv[i] - pLow) * ( 255 / ( pHigh - pLow) );
-                rgb = BeautifyUtils.HSVtoRGB(hsv);
-                BeautifyUtils.clamp(rgb);
-                pixel = BeautifyUtils.convertToPixel(rgb);
-                out.setRGB(u, v, pixel);
-            }
-        }
-        return  out;
-    }
+//    public BufferedImage autoContrast(BufferedImage img){
+//        BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+//        for(int u = 0; u < img.getWidth(); u++){
+//            for(int v = 0; v < img.getHeight(); v++){
+//                int pixel = img.getRGB(u, v);
+//                int[] rgb = BeautifyUtils.convertToRGB(pixel);
+//                float[] hsv = BeautifyUtils.RGBtoHSV(rgb);
+//                int i = 2;
+//                hsv[i] = (hsv[i] - pLow) * ( 255 / ( pHigh - pLow) );
+//                rgb = BeautifyUtils.HSVtoRGB(hsv);
+//                BeautifyUtils.clamp(rgb);
+//                pixel = BeautifyUtils.convertToPixel(rgb);
+//                out.setRGB(u, v, pixel);
+//            }
+//        }
+//        return  out;
+//    }
 
 }

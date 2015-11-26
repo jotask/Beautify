@@ -31,7 +31,7 @@ public class Jota extends Filter{
         this.setName("JoseFilter");
     }
 
-    private boolean debug = false;
+    private boolean debug = true;
 
     @Override
     public BufferedImage filter(BufferedImage ip) {
@@ -73,7 +73,10 @@ public class Jota extends Filter{
 
     private BufferedImage test(BufferedImage input){
 
-        BufferedImage output = BeautifyUtils.getCopy(input);
+        BufferedImage output = null;
+
+        UnsharpMaskFilter filter = new UnsharpMaskFilter();
+        output = filter.filter(input);
 
         return output;
 
