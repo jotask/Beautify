@@ -60,6 +60,7 @@ public class GaussianFilter {
         for(int i = 0; i < res.length; i++){
             res[i] = (float)(dvs[i] / sum);
         }
+
         return res;
 
     }

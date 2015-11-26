@@ -19,11 +19,10 @@ public class Unsharp {
         BufferedImage output = BeautifyUtils.getCopy(input);
 
         Raster inputRaster = input.getData();
-        WritableRaster out = output.getRaster();
 
         double alpha = 1;
-        double sigma = 5;
-        BufferedImage mask = gaussianBlur(input, sigma);
+
+        BufferedImage mask = input;
         WritableRaster maskRaster = mask.getRaster();
 
         for(int u = 0; u < input.getWidth(); u++){
@@ -45,15 +44,15 @@ public class Unsharp {
 
     }
 
-    private BufferedImage gaussianBlur(BufferedImage input, double sigma){
-        BufferedImage xFilterImage = BeautifyUtils.getCopy(input);
-        BufferedImage outputImg = BeautifyUtils.getCopy(input);
-        Raster inputRaster = input.getData();
-        WritableRaster writabeRaster = outputImg.getRaster();
-
-
-
-        return outputImg;
-    }
+//    private BufferedImage gaussianBlur(BufferedImage input, double sigma){
+//        BufferedImage xFilterImage = BeautifyUtils.getCopy(input);
+//        BufferedImage outputImg = BeautifyUtils.getCopy(input);
+//        Raster inputRaster = input.getData();
+//        WritableRaster writabeRaster = outputImg.getRaster();
+//
+//
+//
+//        return outputImg;
+//    }
 
 }
