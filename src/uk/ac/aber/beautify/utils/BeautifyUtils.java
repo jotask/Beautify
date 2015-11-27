@@ -174,7 +174,7 @@ public abstract class BeautifyUtils {
 
 	public static BufferedImage getCopy(BufferedImage original){
 		BufferedImage output = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
-//		output.setData(original.getData());
+		output.setData(original.getData());
 		return  output;
 	}
 
