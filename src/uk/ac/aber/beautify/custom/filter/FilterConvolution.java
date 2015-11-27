@@ -1,6 +1,6 @@
 package uk.ac.aber.beautify.custom.filter;
 
-import uk.ac.aber.beautify.custom.filter.kernel.Kernel;
+import uk.ac.aber.beautify.utils.BeautifyUtils;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -26,7 +26,7 @@ public class FilterConvolution {
     public FilterConvolution(int size, BufferedImage original) {
         kernel = new Kernel(size);
         this.inputBI = original;
-        this.input = original.getRaster();
+        this.input = original.getData();
         outputBI = getNewBI();
         outputBI.setData(input);
         this.output = outputBI.getRaster();
@@ -133,6 +133,72 @@ public class FilterConvolution {
         }
     }
 
+    public void gaussian(){
+
+        kernel.setGaussian();
+
+        int filterWidth = kernel.getFilterWidth();
+        int filterHeight = kernel.getFilterHeight();
+
+        for(int u = 0; u < input.getWidth(); u++){
+            for(int v = 0; v < input.getHeight(); v++) {
+
+                double[] inputPixels =  new double[3];
+
+                double[] outPixel = {0.0, 0.0, 0.0};
+
+                for(int i = -filterWidth; i <= filterWidth; i++){
+                    for(int j = -filterHeight; j <= filterHeight; j++){
+
+                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
+                                inputPixels);
+
+                        double blurFactor = kernel.getValue(i + filterWidth, j + filterHeight);
+
+                        outPixel[0] += inputPixels[0] * blurFactor;
+                        outPixel[1] += inputPixels[1] * blurFactor;
+                        outPixel[2] += inputPixels[2] * blurFactor;
+
+                    }
+                }
+
+                output.setPixel(u, v, outPixel);
+
+            }
+        }
+    }
+
+    public BufferedImage unsharpMaskFilter(){
+
+        BufferedImage output = BeautifyUtils.getCopy(outputBI);
+        Raster in = outputBI.getData();
+
+        BufferedImage mask = BeautifyUtils.getCopy(output);
+        WritableRaster wr = mask.getRaster();
+
+        int alpha =  1;
+
+        for(int u = 0; u < mask.getWidth(); u++){
+            for(int v = 0; v < mask.getHeight(); v++){
+
+                double[] maskPixels = new double[3];
+                double[] inputPixels = new double[3];
+
+                in.getPixel(u, v, inputPixels);
+                wr.getPixel(u, v, maskPixels);
+
+                for(int i = 0; i < inputPixels.length; i++){
+                    maskPixels[i] = Math.max(Math.min((( 1 + alpha) * inputPixels[i]) - (alpha * maskPixels[i]), 255), 0);
+                }
+
+                wr.setPixel(u, v, maskPixels);
+
+            }
+        }
+        return mask;
+    }
+
     private double[] calculateTheMedian(double[][] values) {
         double[] result = new double[3];
         for(int i = 0; i < values.length; i++){
@@ -146,44 +212,6 @@ public class FilterConvolution {
             result[i] = median;
         }
         return result;
-    }
-
-    public void gaussian(){
-
-        kernel.setGaussianKernel();
-
-        int filterWidth = kernel.getFilterWidth();
-        int filterHeight = kernel.getFilterHeight();
-
-        for(int u = 0; u < input.getWidth(); u++){
-            for(int v = 0; v < input.getHeight(); v++) {
-
-                double[] inputPixels =  new double[3];
-
-                double[] sum = {0.0, 0.0, 0.0};
-
-                for(int i = -filterWidth; i <= filterWidth; i++){
-                    for(int j = -filterHeight; j <= filterHeight; j++){
-
-                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
-                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
-                                inputPixels);
-
-                        sum[0] += inputPixels[0] * kernel.getValue(i + filterWidth, j + filterHeight);
-                        sum[1] += inputPixels[1] * kernel.getValue(i + filterWidth, j + filterHeight);
-                        sum[2] += inputPixels[2] * kernel.getValue(i + filterWidth, j + filterHeight);
-
-                    }
-                }
-
-                double[] outPixel = new double[3];
-                outPixel[0] = sum[0];
-                outPixel[1] = sum[1];
-                outPixel[2] = sum[2];
-                output.setPixel(u, v, outPixel);
-
-            }
-        }
     }
 
     public BufferedImage getOutput(){
