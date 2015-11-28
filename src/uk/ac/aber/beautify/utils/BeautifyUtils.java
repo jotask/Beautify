@@ -12,6 +12,13 @@ public abstract class BeautifyUtils {
 		}
 		return values;
 	}
+
+	public static double[] clamp(double[] values) {
+		for (int i = 0; i < values.length; i++) {
+			values[i] = Math.min(Math.max(0, values[i]), 255);
+		}
+		return values;
+	}
 	
 	/**
 	 * The RGBtoHSV function is taken from the book Principles of Digital Image Processing by 
