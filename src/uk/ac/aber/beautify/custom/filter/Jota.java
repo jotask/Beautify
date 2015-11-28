@@ -75,8 +75,8 @@ public class Jota extends Filter{
 
         BufferedImage output = null;
 
-        UnsharpMaskFilter filter = new UnsharpMaskFilter();
-        output = filter.filter(input);
+        FilterConvolution fc = new FilterConvolution(7);
+        output = fc.unsharpMaskFilter(input);
 
         return output;
 

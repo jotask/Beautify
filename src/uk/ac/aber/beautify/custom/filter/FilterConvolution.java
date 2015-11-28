@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Created by Jose Vives on 17/11/2015.
@@ -18,122 +17,116 @@ public class FilterConvolution {
 
     private Kernel kernel;
 
-    private BufferedImage inputBI;
-    private Raster input;
-    private BufferedImage outputBI;
-    private WritableRaster output;
-
-    public FilterConvolution(int size, BufferedImage original) {
+    public FilterConvolution(int size) {
         kernel = new Kernel(size);
-        this.inputBI = original;
-        this.input = original.getData();
-        outputBI = BeautifyUtils.getCopy(inputBI);
-        this.output = outputBI.getRaster();
     }
 
-    public void blur(){
+//    public void blur(){
+//
+//        kernel.setNormalKernel();
+//
+//        int filterWidth = kernel.getFilterWidth();
+//        int filterHeight = kernel.getFilterHeight();
+//
+//        for(int u = 0; u < input.getWidth(); u++){
+//            for(int v = 0; v < input.getHeight(); v++) {
+//
+//                double[] inputPixels =  new double[3];
+//
+//                double[] sum = {0.0, 0.0, 0.0};
+//
+//                for(int i = -filterWidth; i <= filterWidth; i++){
+//                    for(int j = -filterHeight; j <= filterHeight; j++){
+//
+//                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+//                                        Math.max(Math.min(v + j, input.getHeight() - 1), 0),
+//                                        inputPixels);
+//
+//                        sum[0] += inputPixels[0] * kernel.getValue(i + filterWidth, j + filterHeight);
+//                        sum[1] += inputPixels[1] * kernel.getValue(i + filterWidth, j + filterHeight);
+//                        sum[2] += inputPixels[2] * kernel.getValue(i + filterWidth, j + filterHeight);
+//
+//                    }
+//                }
+//
+//                double[] outPixel = new double[3];
+//                outPixel[0] = sum[0];
+//                outPixel[1] = sum[1];
+//                outPixel[2] = sum[2];
+//                output.setPixel(u, v, outPixel);
+//
+//            }
+//        }
+//    }
+//
+//    public void createNoise(){
+//
+//        Random rand = new Random();
+//
+//        for(int u = 0; u < input.getWidth(); u++) {
+//            for (int v = 0; v < input.getHeight(); v++) {
+//
+//                double[] p = new double[3];
+//                input.getPixel(u, v, p);
+//
+//                int r = rand.nextInt(100);
+//                boolean random = (r > 97) ? true : false;
+//                if(random){
+//                    r = rand.nextInt(100);
+//                    random = (r > 50) ? true : false;
+//                    for(int i = 0; i < p.length; i++) {
+//                        if (random){
+//                            p[i] = 0;
+//                        }else{
+//                            p[i] = 255;
+//                        }
+//                    }
+//                }
+//                output.setPixel(u, v, p);
+//
+//            }
+//        }
+//    }
+//
+//    public void median() {
+//
+//        double[][] values = new double[3][kernel.getWidth() * kernel.getHeight()];
+//        int count;
+//
+//        int filterWidth = kernel.getFilterWidth();
+//        int filterHeight = kernel.getFilterHeight();
+//
+//        for(int u = 0; u < input.getWidth(); u++) {
+//            for (int v = 0; v < input.getHeight(); v++) {
+//
+//                double[] inputPixels =  new double[3];
+//                count = 0;
+//
+//                for(int i = -filterWidth; i <= filterWidth; i++){
+//                    for(int j = -filterHeight; j <= filterHeight; j++){
+//                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+//                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
+//                                inputPixels);
+//                        for(int rgb = 0; rgb < values.length; rgb++)
+//                            values[rgb][count] = inputPixels[rgb];
+//                        count++;
+//                    }
+//                }
+//                double[] median = calculateTheMedian(values);
+//                output.setPixel(u, v, median);
+//            }
+//        }
+//    }
 
-        kernel.setNormalKernel();
-
-        int filterWidth = kernel.getFilterWidth();
-        int filterHeight = kernel.getFilterHeight();
-
-        for(int u = 0; u < input.getWidth(); u++){
-            for(int v = 0; v < input.getHeight(); v++) {
-
-                double[] inputPixels =  new double[3];
-
-                double[] sum = {0.0, 0.0, 0.0};
-
-                for(int i = -filterWidth; i <= filterWidth; i++){
-                    for(int j = -filterHeight; j <= filterHeight; j++){
-
-                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
-                                        Math.max(Math.min(v + j, input.getHeight() - 1), 0),
-                                        inputPixels);
-
-                        sum[0] += inputPixels[0] * kernel.getValue(i + filterWidth, j + filterHeight);
-                        sum[1] += inputPixels[1] * kernel.getValue(i + filterWidth, j + filterHeight);
-                        sum[2] += inputPixels[2] * kernel.getValue(i + filterWidth, j + filterHeight);
-
-                    }
-                }
-
-                double[] outPixel = new double[3];
-                outPixel[0] = sum[0];
-                outPixel[1] = sum[1];
-                outPixel[2] = sum[2];
-                output.setPixel(u, v, outPixel);
-
-            }
-        }
-    }
-
-    public void createNoise(){
-
-        Random rand = new Random();
-
-        for(int u = 0; u < input.getWidth(); u++) {
-            for (int v = 0; v < input.getHeight(); v++) {
-
-                double[] p = new double[3];
-                input.getPixel(u, v, p);
-
-                int r = rand.nextInt(100);
-                boolean random = (r > 97) ? true : false;
-                if(random){
-                    r = rand.nextInt(100);
-                    random = (r > 50) ? true : false;
-                    for(int i = 0; i < p.length; i++) {
-                        if (random){
-                            p[i] = 0;
-                        }else{
-                            p[i] = 255;
-                        }
-                    }
-                }
-                output.setPixel(u, v, p);
-
-            }
-        }
-    }
-
-    public void median() {
-
-        double[][] values = new double[3][kernel.getWidth() * kernel.getHeight()];
-        int count;
-
-        int filterWidth = kernel.getFilterWidth();
-        int filterHeight = kernel.getFilterHeight();
-
-        for(int u = 0; u < input.getWidth(); u++) {
-            for (int v = 0; v < input.getHeight(); v++) {
-
-                double[] inputPixels =  new double[3];
-                count = 0;
-
-                for(int i = -filterWidth; i <= filterWidth; i++){
-                    for(int j = -filterHeight; j <= filterHeight; j++){
-                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
-                                Math.max(Math.min(v + j, input.getHeight() - 1), 0),
-                                inputPixels);
-                        for(int rgb = 0; rgb < values.length; rgb++)
-                            values[rgb][count] = inputPixels[rgb];
-                        count++;
-                    }
-                }
-                double[] median = calculateTheMedian(values);
-                output.setPixel(u, v, median);
-            }
-        }
-    }
-
-    public void gaussian(){
+    public BufferedImage gaussian(BufferedImage input){
 
         kernel.setGaussian();
 
-        BufferedImage o = BeautifyUtils.getCopy(outputBI);
-        WritableRaster wr = o.getRaster();
+        BufferedImage in = BeautifyUtils.getCopy(input);
+        Raster raster = in.getData();
+
+        BufferedImage out = BeautifyUtils.getCopy(input);
+        WritableRaster wr = out.getRaster();
 
         int filterWidth = kernel.getFilterWidth();
         int filterHeight = kernel.getFilterHeight();
@@ -148,7 +141,7 @@ public class FilterConvolution {
                 for(int i = -filterWidth; i <= filterWidth; i++){
                     for(int j = -filterHeight; j <= filterHeight; j++){
 
-                        output.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
+                        raster.getPixel(Math.max(Math.min(u + i, input.getWidth() - 1), 0),
                                 Math.max(Math.min(v + j, input.getHeight() - 1), 0),
                                 inputPixels);
 
@@ -164,18 +157,18 @@ public class FilterConvolution {
                 wr.setPixel(u, v, outPixel);
             }
         }
-        outputBI = o;
+        return out;
     }
 
-    public BufferedImage unsharpMaskFilter(){
+    public BufferedImage unsharpMaskFilter(BufferedImage input){
 
-        BufferedImage output = BeautifyUtils.getCopy(outputBI);
-        Raster in = outputBI.getData();
+        BufferedImage output = BeautifyUtils.getCopy(input);
+        Raster raster = output.getData();
 
-        BufferedImage mask = BeautifyUtils.getCopy(output);
+        BufferedImage mask = gaussian(output);
         WritableRaster wr = mask.getRaster();
 
-        int alpha =  1;
+        double alpha =  1.0;
 
         for(int u = 0; u < mask.getWidth(); u++){
             for(int v = 0; v < mask.getHeight(); v++){
@@ -183,11 +176,11 @@ public class FilterConvolution {
                 double[] maskPixels = new double[3];
                 double[] inputPixels = new double[3];
 
-                in.getPixel(u, v, inputPixels);
+                raster.getPixel(u, v, inputPixels);
                 wr.getPixel(u, v, maskPixels);
 
                 for(int i = 0; i < inputPixels.length; i++){
-                    maskPixels[i] = Math.max(Math.min((( 1 + alpha) * inputPixels[i]) - (alpha * maskPixels[i]), 255), 0);
+                    maskPixels[i] = Math.max(Math.min((( 1.0 + alpha) * inputPixels[i]) - (alpha * maskPixels[i]), 255.0), 0.0);
                 }
 
                 wr.setPixel(u, v, maskPixels);
@@ -212,7 +205,4 @@ public class FilterConvolution {
         return result;
     }
 
-    public BufferedImage getOutput(){
-        return this.outputBI;
-    }
 }

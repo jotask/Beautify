@@ -9,10 +9,8 @@ package uk.ac.aber.beautify.custom.filter;
 public class Kernel {
 
     private double[][] kernel;
-    private int size;
 
     public Kernel(int size) {
-        this.size = size;
         kernel = new double[size][size];
     }
 
@@ -47,38 +45,32 @@ public class Kernel {
 
     public void setGaussian() {
 
-        int radius;
-        radius = size / 2;
+        int radius = getRadius();
 
-        if (radius < 1) {
-            throw new IllegalArgumentException("Radius must be >= 1");
-        }
+        double[][] k = new double[radius * 2 + 1][radius * 2 + 1];
+        double total = 0.0;
 
-        double[][] data = new double[radius * 2 + 1][radius * 2 + 1];
-
-        float sigma = radius / 3.0f;
-        float twoSigmaSquare = 2.0f * sigma * sigma;
-        float sigmaRoot = (float) Math.sqrt(twoSigmaSquare * Math.PI);
-        float total = 0.0f;
+        double sigma = radius / 3.0;
+        double twoSigmaSquare = 2.0 * sigma * sigma;
+        double sigmaRoot = Math.sqrt(twoSigmaSquare * Math.PI);
 
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                float distanceI = i * i;
-                float distanceJ = j * j;
+                double distance = i*i + j*j ;
                 int indexI = i + radius;
                 int indexJ = j + radius;
-                data[indexI][indexJ] = (float)((Math.exp(-distanceI / twoSigmaSquare) + Math.exp(-distanceJ / twoSigmaSquare)) / sigmaRoot);
-                total += data[indexI][indexJ];
+                k[indexI][indexJ] = Math.exp(-distance / twoSigmaSquare) / sigmaRoot;
+                total += k[indexI][indexJ];
             }
         }
 
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data.length; j++) {
-                data[i][j] /= total;
+        for (int i = 0; i < k.length; i++) {
+            for (int j = 0; j < k[0].length ; j++) {
+                k[i][j] /= total;
             }
         }
 
-        kernel = data;
+        kernel = k;
 
     }
 
