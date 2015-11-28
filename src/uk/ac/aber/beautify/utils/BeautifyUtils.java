@@ -41,30 +41,30 @@ public abstract class BeautifyUtils {
 		double cHi = Math.max(R, Math.max(G, B));
 		double cLo = Math.min(R, Math.min(G, B));
 		double cRng = cHi - cLo;
-		
+
 		V = cHi / cMax;
-		
+
 		if (cHi > 0)	S = (float) cRng / cHi;
-		
+
 		if (cRng > 0) {
 			double rr = (double) (cHi - R) / cRng;
 			double gg = (double) (cHi - G) / cRng;
 			double bb = (double) (cHi - B) / cRng;
 
 			double hh;
-			
+
 			if (R == cHi)		hh = bb - gg;
 			else if (G == cHi)	hh = rr - bb + 2.0f;
 			else 				hh = gg - rr + 4.0f;
-			
+
 			if (hh < 0)			hh = hh + 6;
-			
+
 			H = hh / 6;
 		}
 
 		double[] HSV = new double[3];
 		HSV[0] = H; HSV[1] = S; HSV[2] = V;
-		
+
 		return HSV;
 	}
 	
@@ -236,6 +236,102 @@ public abstract class BeautifyUtils {
 
 		return  xyz;
 
+	}
+
+	public static double[] RGB2HSV(double[] tmp){
+
+		double R = tmp[0] / 255.0;
+		double G = tmp[1] / 255.0;
+		double B = tmp[2] / 255.0;
+
+		double min = (Math.min(Math.min(R, G), B));
+		double max = (Math.max(Math.max(R, G), B));
+		double delta = max - min;
+
+		double H = max;
+		double S = max;
+		double V = max;
+
+		if(delta == 0){
+			H = 0;
+			S = 0;
+		}else{
+
+			S = delta / max;
+
+			double delR = ( ( ( max - R ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+			double delG = ( ( ( max - G ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+			double delB = ( ( ( max - B ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+
+			if(R == max){
+				H = delB - delG;
+			}else if(G == max){
+				H = (1.0/3.0) + delR - delB;
+			}else if(B == max){
+				H = (2.0/3.0) + delG - delR;
+			}
+
+			if(H < 0) H += 1;
+			if(H > 1) H -= 1;
+		}
+
+		double[] hsv = new double[3];
+		hsv[0] = H;
+		hsv[1] = S;
+		hsv[2] = V;
+		return hsv;
+	}
+
+	public static double[] HSV2RGB(double[] hsv){
+
+		double[] rgb = new double[3];
+
+		int h = 0;
+		int s = 1;
+		int v = 2;
+
+		if(hsv[s] == 0){
+			for(int i = 0; i < rgb.length; i++){
+				rgb[i] = hsv[v] * 255.0;
+			}
+		}else{
+			double H = hsv[h] * 6;
+			if(H == 6) H = 0;
+			int i = (int) H;
+			double one = hsv[v] * (1 - hsv[s]);
+			double two = hsv[v] * (1 - hsv[s] * (H - i) );
+			double thee = hsv[v] * (1 - hsv[s] *(1-(H - i)));
+			if( i == 0){
+				rgb[0] = hsv[v];
+				rgb[1] = thee;
+				rgb[2] = one;
+			}else if( i == 1) {
+				rgb[0] = two;
+				rgb[1] = hsv[v];
+				rgb[2] = one;
+			}else if( i==2){
+				rgb[0] = one;
+				rgb[1] = hsv[v];
+				rgb[2] = thee;
+			}else if(i==3){
+				rgb[0] = one;
+				rgb[1] = two;
+				rgb[2] = hsv[v];
+			}else if(i==4) {
+				rgb[0] = thee;
+				rgb[1] = one;
+				rgb[2] = hsv[v];
+			}else{
+				rgb[0] = hsv[v];
+				rgb[1] = one;
+				rgb[2] = two;
+			}
+			for(int j = 0; j < rgb.length; j++){
+				rgb[j] *= 255;
+			}
+		}
+
+		return rgb;
 	}
 
 	public static double[] RGBtoLAB(double[] rgb){
