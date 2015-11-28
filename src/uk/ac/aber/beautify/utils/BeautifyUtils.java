@@ -185,6 +185,11 @@ public abstract class BeautifyUtils {
 		return  output;
 	}
 
+	public static BufferedImage getEmptyCopy(BufferedImage original){
+		BufferedImage output = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
+		return  output;
+	}
+
 	public static double[] XYZtoLAB(double[] pixels) {
 
 		double[] lab = new double[pixels.length];
