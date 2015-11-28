@@ -27,13 +27,8 @@ public class FilterConvolution {
         kernel = new Kernel(size);
         this.inputBI = original;
         this.input = original.getData();
-        outputBI = getNewBI();
-        outputBI.setData(input);
+        outputBI = BeautifyUtils.getCopy(inputBI);
         this.output = outputBI.getRaster();
-    }
-
-    private BufferedImage getNewBI(){
-        return new BufferedImage(inputBI.getWidth(), inputBI.getHeight(), inputBI.getType());
     }
 
     public void blur(){
@@ -137,6 +132,9 @@ public class FilterConvolution {
 
         kernel.setGaussian();
 
+        BufferedImage o = BeautifyUtils.getCopy(outputBI);
+        WritableRaster wr = o.getRaster();
+
         int filterWidth = kernel.getFilterWidth();
         int filterHeight = kernel.getFilterHeight();
 
@@ -145,7 +143,7 @@ public class FilterConvolution {
 
                 double[] inputPixels =  new double[3];
 
-                double[] outPixel = {0.0, 0.0, 0.0};
+                double[] outPixel = new double[3];
 
                 for(int i = -filterWidth; i <= filterWidth; i++){
                     for(int j = -filterHeight; j <= filterHeight; j++){
@@ -156,17 +154,17 @@ public class FilterConvolution {
 
                         double blurFactor = kernel.getValue(i + filterWidth, j + filterHeight);
 
-                        outPixel[0] += inputPixels[0] * blurFactor;
-                        outPixel[1] += inputPixels[1] * blurFactor;
-                        outPixel[2] += inputPixels[2] * blurFactor;
+                        for(int tmp = 0; tmp < outPixel.length; tmp++) {
+                            outPixel[tmp] += inputPixels[tmp] * blurFactor;
+                        }
 
                     }
                 }
-
-                output.setPixel(u, v, outPixel);
-
+                outPixel = BeautifyUtils.clamp(outPixel);
+                wr.setPixel(u, v, outPixel);
             }
         }
+        outputBI = o;
     }
 
     public BufferedImage unsharpMaskFilter(){
