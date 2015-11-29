@@ -38,7 +38,6 @@ public class Jose extends Filter{
                 double[] lab = BeautifyUtils.RGBtoLAB(rgb);
 
                 lab[0] += -5;
-                lab[1] += 5;
                 lab[2] += 10;
 
                 rgb = BeautifyUtils.LABtoRGB(lab);
