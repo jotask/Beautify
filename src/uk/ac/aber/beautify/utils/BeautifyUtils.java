@@ -2,10 +2,26 @@ package uk.ac.aber.beautify.utils;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Class for utilities like convert between two color spaces or clamp values
+ *
+ * @author Harry Strange and Jose Vives
+ */
 public abstract class BeautifyUtils {
 
+	/**
+	 * The CIE Standard Illuminant D65 values used in the lab conversion
+	 */
 	private static final double[] D65 = {95.0429, 100.0, 108.890};
 
+	/**
+	 * Clamp the int values between 0 and 255
+	 * @author Harry Strange
+	 * @param values
+	 * 		The int values for clamp
+	 * @return
+	 * 		The int values clamped
+     */
 	public static int[] clamp(int[] values) {
 		for (int i = 0; i < values.length; i++) {
 			values[i] = Math.min(Math.max(0, values[i]), 255);
@@ -13,6 +29,14 @@ public abstract class BeautifyUtils {
 		return values;
 	}
 
+	/**
+	 * Clamp the double values between 0 and 255
+	 * @autho Harry Strange and Jose Vives
+	 * @param values
+	 * 		The double values for clamp
+	 * @return
+	 * 		The double values clamped
+	 */
 	public static double[] clamp(double[] values) {
 		for (int i = 0; i < values.length; i++) {
 			values[i] = Math.min(Math.max(0, values[i]), 255);
@@ -114,6 +138,13 @@ public abstract class BeautifyUtils {
 		return rgb;
 	}
 
+	/**
+	 * Convert a pixel value to a rgb values
+	 * @param pixel
+	 * 		The pixel information to conver
+	 * @return
+	 * 		The array for the rgb values
+     */
 	public static int[] convertToRGB(int pixel){
 		int rgb[] = new int[3];
 
@@ -124,10 +155,27 @@ public abstract class BeautifyUtils {
 		return rgb;
 	}
 
+	/**
+	 * Convert a rgb array of values to a single pixel value
+	 * @param rgb
+	 * 		The rgb array to convert
+	 * @return
+	 * 		The pixel value calculated
+     */
 	public static int convertToPixel(int[] rgb){
 		return ((rgb[0] & 0xff) << 16) | ((rgb[1] & 0xff) << 8) | (rgb[2] & 0xff);
 	}
 
+	/**
+	 * Convert RGB to XYZ color space
+	 *
+	 * Pseudocode from easyRGB.com
+	 *
+	 * @param pixels
+	 * 		The rgb pixel to conver
+	 * @return
+	 * 		The xyz converted pixels
+     */
 	public static double[] RGBtoXYZ(double[] pixels){
 
 		double[] rgb = new double[pixels.length];
@@ -153,6 +201,16 @@ public abstract class BeautifyUtils {
 
 	}
 
+	/**
+	 * Convert  from xyz to RGB
+	 *
+	 * Pseudocode from easyRGB.com
+	 *
+	 * @param pixels
+	 * 		The xyz values to convert
+	 * @return
+	 * 		The rgb values converted
+     */
 	public static double[] XYZtoRGB(double[] pixels){
 
 		double[] rgb = new double[pixels.length];
@@ -179,17 +237,41 @@ public abstract class BeautifyUtils {
 		return rgb;
 	}
 
+	/**
+	 * Get a exact copy from a image
+	 * @param original
+	 * 		The image to copy
+	 * @return
+	 * 		The new image copy
+     */
 	public static BufferedImage getCopy(BufferedImage original){
 		BufferedImage output = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
 		output.setData(original.getData());
 		return  output;
 	}
 
+	/**
+	 * Get an image with the same characteristics but with empty
+	 * @param original
+	 * 		The image to copy
+	 * @return
+	 * 		The new image copy
+     */
 	public static BufferedImage getEmptyCopy(BufferedImage original){
 		BufferedImage output = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
 		return  output;
 	}
 
+	/**
+	 * Convert XYZ color space to LAB color space using the illuminant D65 values
+	 *
+	 * Pseudocode from easyRGB.com
+	 *
+	 * @param pixels
+	 * 		The XYZ values to convert
+	 * @return
+	 * 		The lab values converted
+     */
 	public static double[] XYZtoLAB(double[] pixels) {
 
 		double[] lab = new double[pixels.length];
@@ -214,6 +296,16 @@ public abstract class BeautifyUtils {
 		return lab;
 	}
 
+	/**
+	 * Convert LAB to XYZ color space
+	 *
+	 * Pseudocode from easyRGB.com
+	 *
+	 * @param lab
+	 * 		The lab values to convert
+	 * @return
+	 * 		The XYZ values converted
+     */
 	public static double[] LABtoXYZ(double[] lab) {
 
 		double[] xyz = new double[lab.length];
@@ -238,6 +330,16 @@ public abstract class BeautifyUtils {
 
 	}
 
+	/**
+	 * My owm implementation for convert rgb to hsv, without the the 255 division
+	 *
+	 * Pseudocode from easyRGB.com
+	 *
+	 * @param tmp
+	 * 		The rgb values to convert
+	 * @return
+	 * 		The hsv values converted
+     */
 	public static double[] RGB2HSV(double[] tmp){
 
 		double R = tmp[0] / 255.0;
@@ -282,6 +384,16 @@ public abstract class BeautifyUtils {
 		return hsv;
 	}
 
+	/**
+	 * My owm implementation for convert hsv to rgb, without the the 255 division
+	 *
+	 * Pseudocode from easyRGB.com
+	 *
+	 * @param hsv
+	 * 		The hsv values to convert
+	 * @return
+	 * 		The rgb values converted
+	 */
 	public static double[] HSV2RGB(double[] hsv){
 
 		double[] rgb = new double[3];
@@ -334,10 +446,24 @@ public abstract class BeautifyUtils {
 		return rgb;
 	}
 
+	/**
+	 * Quick method for convert between RGB to lab
+	 * @param rgb
+	 * 		The rgb values
+	 * @return
+	 * 		The lab values
+     */
 	public static double[] RGBtoLAB(double[] rgb){
 		return BeautifyUtils.XYZtoLAB(BeautifyUtils.RGBtoXYZ(rgb));
 	}
 
+	/**
+	 * Quick method for conver between LAB to rgb
+	 * @param lab
+	 * 		The lab values
+	 * @return
+	 * 		The rgb values
+     */
 	public static double[] LABtoRGB(double[] lab){
 		return BeautifyUtils.XYZtoRGB(BeautifyUtils.LABtoXYZ(lab));
 	}
