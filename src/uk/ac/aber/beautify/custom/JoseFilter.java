@@ -1,7 +1,6 @@
 package uk.ac.aber.beautify.custom;
 
 import uk.ac.aber.beautify.core.BeautifyFilters;
-import uk.ac.aber.beautify.custom.filter.Jota;
 import uk.ac.aber.beautify.filters.Filter;
 
 /**
@@ -10,11 +9,11 @@ import uk.ac.aber.beautify.filters.Filter;
  * @author Jose Vives.
  * @since 14/11/2015
  */
-public class JotaFilter implements BeautifyFilters {
+public class JoseFilter implements BeautifyFilters {
 
     @Override
     public Filter autoBeautify() {
-        return new Jota();
+        return new Jose();
     }
 
     @Override

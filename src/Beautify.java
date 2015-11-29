@@ -9,8 +9,9 @@
  * BeautifyFilters interface.
  * 
  */
+
 import uk.ac.aber.beautify.core.BeautifyKernel;
-import uk.ac.aber.beautify.custom.JotaFilter;
+import uk.ac.aber.beautify.custom.JoseFilter;
 import uk.ac.aber.beautify.gui.BeautifyGUI;
 
 public class Beautify {
@@ -25,7 +26,7 @@ public class Beautify {
 		
 		
 		// TODO: Over-ride this part with your own filter set
-		beautify.setFilterSet(new JotaFilter());
+		beautify.setFilterSet(new JoseFilter());
 		
 	}	
 }
