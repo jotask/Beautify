@@ -1,10 +1,10 @@
 package uk.ac.aber.beautify.custom;
 
+import uk.ac.aber.beautify.custom.texture.Blending;
 import uk.ac.aber.beautify.filters.Filter;
 import uk.ac.aber.beautify.utils.BeautifyUtils;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 /**
@@ -15,13 +15,6 @@ import java.awt.image.WritableRaster;
  */
 public class Jose extends Filter{
 
-    /**
-     * Filter for noise removal -> Convert to HSV ->
-     * Brightness/contrast adjust on Saturation ->
-     * Histogram equalisation on Value ->
-     * Convert to RGB
-     */
-
     public Jose() {
         this.setName("JoseFilter");
     }
@@ -30,31 +23,33 @@ public class Jose extends Filter{
     public BufferedImage filter(BufferedImage input) {
 
         BufferedImage output = BeautifyUtils.getCopy(input);
-        Raster inputRater = input.getData();
-        WritableRaster outputRaster = output.getRaster();
 
-        for(int u = 0; u < inputRater.getWidth(); u++){
-            for(int v = 0; v < inputRater.getHeight(); v++){
+        output = FilterConvolution.unsharpMaskFilter(output, 15, 2.0);
+
+        WritableRaster raster = output.getRaster();
+
+        for(int u = 0; u < raster.getWidth(); u++){
+            for(int v = 0; v < raster.getHeight(); v++){
 
                 double[] rgb = new double[3];
 
-                inputRater.getPixel(u, v, rgb);
-
-                double[] hsv = BeautifyUtils.RGB2HSV(rgb);
-
-                rgb = BeautifyUtils.HSV2RGB(hsv);
+                raster.getPixel(u, v, rgb);
 
                 double[] lab = BeautifyUtils.RGBtoLAB(rgb);
 
+                lab[0] += 5;
+                lab[1] += 5;
                 lab[2] += 10;
 
                 rgb = BeautifyUtils.LABtoRGB(lab);
 
                 rgb = BeautifyUtils.clamp(rgb);
-                outputRaster.setPixel(u, v, rgb);
+                raster.setPixel(u, v, rgb);
 
             }
         }
+
+        output = Blending.multiply(output);
 
         return output;
     }

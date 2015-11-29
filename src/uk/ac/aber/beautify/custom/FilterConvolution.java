@@ -228,15 +228,13 @@ public class FilterConvolution {
      * @return
      *      The image with the filter applied
      */
-    public static BufferedImage unsharpMaskFilter(BufferedImage input, int size){
+    public static BufferedImage unsharpMaskFilter(BufferedImage input, int size, double alpha){
 
         BufferedImage output = BeautifyUtils.getCopy(input);
         Raster raster = output.getData();
 
         BufferedImage mask = gaussian(output, size);
         WritableRaster wr = mask.getRaster();
-
-        double alpha =  1.0;
 
         for(int u = 0; u < mask.getWidth(); u++){
             for(int v = 0; v < mask.getHeight(); v++){
