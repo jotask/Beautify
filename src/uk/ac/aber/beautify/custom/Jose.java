@@ -1,4 +1,4 @@
-package uk.ac.aber.beautify.custom.filter;
+package uk.ac.aber.beautify.custom;
 
 import uk.ac.aber.beautify.filters.Filter;
 import uk.ac.aber.beautify.utils.BeautifyUtils;
@@ -13,35 +13,21 @@ import java.awt.image.WritableRaster;
  * @author Jose Vives.
  * @since 14/11/2015
  */
-public class Jota extends Filter{
+public class Jose extends Filter{
 
     /**
      * Filter for noise removal -> Convert to HSV ->
      * Brightness/contrast adjust on Saturation ->
-     * Histogram equalisation on Value -> Convert to RGB
+     * Histogram equalisation on Value ->
+     * Convert to RGB
      */
 
-    /**
-     * Reduce noise
-     * apply the gaussian filter
-     * apply unsharp filter
-     */
-
-    public Jota() {
+    public Jose() {
         this.setName("JoseFilter");
     }
 
-    private boolean debug = true;
-
     @Override
-    public BufferedImage filter(BufferedImage ip) {
-
-        if(debug)
-            return test(ip);
-        return realFilter(ip);
-    }
-
-    private BufferedImage realFilter(BufferedImage input){
+    public BufferedImage filter(BufferedImage input) {
 
         BufferedImage output = BeautifyUtils.getCopy(input);
         Raster inputRater = input.getData();
@@ -54,32 +40,23 @@ public class Jota extends Filter{
 
                 inputRater.getPixel(u, v, rgb);
 
-                double[] hsv = BeautifyUtils.RGBtoHSV(rgb);
+                double[] hsv = BeautifyUtils.RGB2HSV(rgb);
 
-                rgb = BeautifyUtils.HSVtoRGB(hsv);
+                rgb = BeautifyUtils.HSV2RGB(hsv);
 
                 double[] lab = BeautifyUtils.RGBtoLAB(rgb);
 
+                lab[2] += 10;
+
                 rgb = BeautifyUtils.LABtoRGB(lab);
 
+                rgb = BeautifyUtils.clamp(rgb);
                 outputRaster.setPixel(u, v, rgb);
 
             }
         }
 
         return output;
-
-    }
-
-    private BufferedImage test(BufferedImage input){
-
-        BufferedImage output = null;
-
-        FilterConvolution fc = new FilterConvolution(7);
-        output = fc.unsharpMaskFilter(input);
-
-        return output;
-
     }
 
 }

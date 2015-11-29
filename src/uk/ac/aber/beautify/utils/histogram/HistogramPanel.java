@@ -1,4 +1,4 @@
-package uk.ac.aber.beautify.custom.histogram;
+package uk.ac.aber.beautify.utils.histogram;
 
 import javax.swing.*;
 import java.awt.*;
