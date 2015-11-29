@@ -98,10 +98,10 @@ public class FilterConvolution {
                 raster.getPixel(u, v, p);
 
                 int r = rand.nextInt(100);
-                boolean random = (r > 97) ? true : false;
+                boolean random = (r > 97);
                 if(random){
                     r = rand.nextInt(100);
-                    random = (r > 50) ? true : false;
+                    random = (r > 50);
                     for(int i = 0; i < p.length; i++) {
                         if (random){
                             p[i] = 0;

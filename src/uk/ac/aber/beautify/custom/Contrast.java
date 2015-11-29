@@ -22,7 +22,7 @@ import java.awt.image.WritableRaster;
 public class Contrast {
 
     private Histogram histogram;
-    private BufferedImage image;
+    private final BufferedImage image;
 
     private final int channel = 0;
 
@@ -50,11 +50,12 @@ public class Contrast {
 
         // pLow
 
-        main:for(int i = 0; i < cum.length; i++){
-            int value = cum[i][channel];
-            if(value != 0 && value < pLow){
+        main:
+        for (int[] aCum : cum) {
+            int value = aCum[channel];
+            if (value != 0 && value < pLow) {
                 pLow = value;
-                break main;
+                break;
             }
         }
 
@@ -64,7 +65,7 @@ public class Contrast {
             int value = cum[i][channel];
             if(value != 0 && value > pHigh){
                 pHigh = value;
-                break main;
+                break;
             }
         }
         System.out.println("pLow: " + pLow + " pHigh: " + pHigh);
@@ -141,17 +142,18 @@ public class Contrast {
         double pHigh = Double.MIN_VALUE;
 
 
-        main:for(int i = 0; i < vHistogram.length; i++){
-            if(((int)(vHistogram[i])) > 0){
-                pLow = vHistogram[i];
-                break main;
+        main:
+        for (double aVHistogram : vHistogram) {
+            if (((int) (aVHistogram)) > 0) {
+                pLow = aVHistogram;
+                break;
             }
         }
 
         main:for(int i = vHistogram.length - 1; i >= 0; i--){
             if(((int)(vHistogram[i])) < 0){
                 pHigh = vHistogram[i];
-                break main;
+                break;
             }
         }
 
@@ -163,8 +165,7 @@ public class Contrast {
         double primaHigh = pHigh;
         double Q = 0.005;
 
-        for(int i = 0; i < cumulative.length; i++){
-            double a = cumulative[i];
+        for (double a : cumulative) {
             double b = 0;
             primaHigh = Math.min(a, b);
         }
