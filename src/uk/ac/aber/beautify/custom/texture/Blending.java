@@ -10,18 +10,25 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by Jose Vives on 29/11/2015.
+ * This class blends two images together
  *
  * @author Jose Vives.
  * @since 29/11/2015
  */
 public abstract class Blending {
 
+    /**
+     * Get the mask for blennding
+     * @param width
+     *      The width of the result mask
+     * @param height
+     *      The height of the result mask
+     * @return
+     *      The mask in the proper size
+     */
     private static BufferedImage getMask(int width, int height){
 
         URL url = Blending.class.getResource("/uk/ac/aber/beautify/custom/texture/gaussian.jpg");
-
-        System.out.println(url);
 
         BufferedImage mask = null;
         try {
@@ -33,23 +40,40 @@ public abstract class Blending {
         return scaleMask(mask, width, height);
     }
 
-    private static BufferedImage scaleMask(BufferedImage src, int w, int h){
-        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        int x, y;
+    /**
+     * Scale one image to the desired size.
+     * Original code from stackOverFlow.com forum
+     * (I lost the post where I found it)
+     * @param src
+     *      The image to scale
+     * @param w
+     *      The width for the final image
+     * @param h
+     *      The height for the final image
+     * @return
+     *      The new image width the righ size
+     */
+    private static BufferedImage scaleMask(BufferedImage src, int width, int heigth){
+        BufferedImage img = new BufferedImage(width, heigth, src.getType());
         int ww = src.getWidth();
         int hh = src.getHeight();
-        for (x = 0; x < w; x++) {
-            for (y = 0; y < h; y++) {
-                int col = src.getRGB(x * ww / w, y * hh / h);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < heigth; y++) {
+                int col = src.getRGB(x * ww / width, y * hh / heigth);
                 img.setRGB(x, y, col);
             }
         }
         return img;
     }
 
-    public static BufferedImage multiply(BufferedImage input){
-
-        double alpha = 0.75;
+    /**
+     * Multiply two images together with an alpha value
+     * @param input
+     *      The image for apply the blending
+     * @return
+     *      The new image with the blending done
+     */
+    public static BufferedImage multiply(BufferedImage input, double alpha){
 
         BufferedImage mask = getMask(input.getWidth(), input.getHeight());
         Raster maskRaster = mask.getData();
@@ -78,7 +102,6 @@ public abstract class Blending {
 
             }
         }
-
         return output;
     }
 

@@ -37,7 +37,7 @@ public class Jose extends Filter{
 
                 double[] lab = BeautifyUtils.RGBtoLAB(rgb);
 
-                lab[0] += 5;
+                lab[0] += -5;
                 lab[1] += 5;
                 lab[2] += 10;
 
@@ -49,7 +49,7 @@ public class Jose extends Filter{
             }
         }
 
-        output = Blending.multiply(output);
+        output = Blending.multiply(output, 0.75);
 
         return output;
     }
