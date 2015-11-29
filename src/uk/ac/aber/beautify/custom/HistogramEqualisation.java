@@ -17,12 +17,12 @@ import java.awt.image.WritableRaster;
  * @author Jose Vives.
  * @since 29/11/2015
  */
-public abstract class HistogramEqualisation {
+abstract class HistogramEqualisation {
 
     /**
      * The channel we want apply the equalisation
      */
-    private static int channel = 2;
+    private static final int channel = 2;
 
     /**
      * Equalisation algorithm
@@ -70,7 +70,7 @@ public abstract class HistogramEqualisation {
      *      The new value
      */
     private static double function(int[][] cumulative, double value, int width){
-        double result = 0.0;
+        double result;
         result = Math.round((cumulative[(int) value][channel]) * ( 255 / width ));
         return  result;
     }
@@ -136,9 +136,7 @@ public abstract class HistogramEqualisation {
          * Add the first value from the histogram to the
          * cumulative histogram fisrt value
          */
-        for(int hsv = 0; hsv < cumulative[0].length; hsv++) {
-            cumulative[0][hsv] = h[0][hsv];
-        }
+        System.arraycopy(h[0], 0, cumulative[0], 0, cumulative[0].length);
 
         /*
          * Add the previously cumulative histogram value and the
