@@ -1,7 +1,6 @@
 package uk.ac.aber.beautify.custom;
 
 import uk.ac.aber.beautify.utils.BeautifyUtils;
-import uk.ac.aber.beautify.utils.Values;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -21,9 +20,9 @@ import java.awt.image.WritableRaster;
 public abstract class HistogramEqualisation {
 
     /**
-     * Channel for make the equalisation
+     * The channel we want apply the equalisation
      */
-    private static Values c = Values.VALUE;
+    private static int channel = 2;
 
     /**
      * Equalisation algorithm
@@ -50,7 +49,7 @@ public abstract class HistogramEqualisation {
                 double[] rgb = new double[3];
                 double[] hsv = BeautifyUtils.RGB2HSV(rgb);
 
-                hsv[c.getIndex()] = function(cumulative, hsv[c.getIndex()], width);
+                hsv[channel] = function(cumulative, hsv[channel], width);
 
                 rgb = BeautifyUtils.clamp(BeautifyUtils.HSV2RGB(hsv));
                 wr.setPixel(u, v, rgb);
@@ -72,7 +71,7 @@ public abstract class HistogramEqualisation {
      */
     private static double function(int[][] cumulative, double value, int width){
         double result = 0.0;
-        result = Math.round((cumulative[(int) value][c.getIndex()]) * ( 255 / width ));
+        result = Math.round((cumulative[(int) value][channel]) * ( 255 / width ));
         return  result;
     }
 
