@@ -46,9 +46,9 @@ public abstract class Blending {
      * (I lost the post where I found it)
      * @param src
      *      The image to scale
-     * @param w
+     * @param width
      *      The width for the final image
-     * @param h
+     * @param heigth
      *      The height for the final image
      * @return
      *      The new image width the righ size

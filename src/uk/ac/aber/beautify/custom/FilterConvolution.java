@@ -248,7 +248,7 @@ public class FilterConvolution {
                 for(int i = 0; i < inputPixels.length; i++){
                     maskPixels[i] = Math.max(Math.min((( 1.0 + alpha) * inputPixels[i]) - (alpha * maskPixels[i]), 255.0), 0.0);
                 }
-
+                maskPixels = BeautifyUtils.clamp(maskPixels);
                 wr.setPixel(u, v, maskPixels);
 
             }

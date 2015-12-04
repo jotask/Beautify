@@ -89,7 +89,8 @@ public class Kernel {
     /**
      * Set this kernel to be a gaussian kernel
      *
-     * All the values for the kernel is calcualted from the size of the kernel
+     * All the values for the kernel is calculated from the size of the kernel
+     * Gaussian Kernel idea from one website ( I can't find where I find it)
      *
      */
     public void setGaussian() {
@@ -102,6 +103,8 @@ public class Kernel {
         double sigma = radius / 3.0;
         double twoSigmaSquare = 2.0 * sigma * sigma;
         double sigmaRoot = Math.sqrt(twoSigmaSquare * Math.PI);
+
+
 
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
