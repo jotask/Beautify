@@ -23,8 +23,6 @@ public class Jose extends Filter{
     public BufferedImage filter(BufferedImage input) {
 
         // Create a copy from the original image for work on this
-        // new
-        // nothing
         BufferedImage output = BeautifyUtils.getCopy(input);
 
         // Firstly we sharp the image using a gaussian filter, and
