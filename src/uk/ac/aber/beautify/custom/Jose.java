@@ -26,7 +26,8 @@ public class Jose extends Filter{
         BufferedImage output = BeautifyUtils.getCopy(input);
 
         // Firstly we sharp the image using a gaussian filter, and
-        // later a unsharp mask filter
+        // later an unsharp mask filter
+        // Final assignment
         output = FilterConvolution.unsharpMaskFilter(output, 15, 2.0);
 
         // Start the point pixel value operations
